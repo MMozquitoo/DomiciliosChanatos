@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Chanatos Burger | Menú digital",
   description:
     "Hamburguesas con esencia propia. Sabor, experiencia y diseño. Menú digital y pedido por WhatsApp.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export const viewport = {
@@ -26,8 +29,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable}>
-      <body className="font-sans">{children}</body>
+    <html lang="es" className={inter.variable} suppressHydrationWarning>
+      <body className="font-sans" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

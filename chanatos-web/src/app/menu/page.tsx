@@ -1,23 +1,48 @@
+"use client";
+
+import { useState } from "react";
 import Header from "@/components/Header";
 import CategoryTabs from "@/components/CategoryTabs";
+import ProductosTop from "@/components/ProductosTop";
 import MenuList from "@/components/MenuList";
-import CartSidebar from "@/components/CartSidebar";
 import CartBottomBar from "@/components/CartBottomBar";
+import CartDrawer from "@/components/CartDrawer";
 
 export default function MenuPage() {
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+
   return (
     <>
-      <Header />
-      <div className="mx-auto max-w-6xl p-4 md:p-6">
-        <main className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
-          <div className="min-w-0">
-            <CategoryTabs />
-            <MenuList />
-          </div>
-          <CartSidebar />
-        </main>
+      <div className="fixed left-0 right-0 top-0 z-[999] flex flex-col bg-white">
+        <Header onOpenCart={() => setCartDrawerOpen(true)} />
+        <div className="lg:hidden">
+          <CategoryTabs />
+        </div>
+      </div>
+      <div className="min-h-screen bg-white md:bg-transparent">
+        <div className="mx-auto max-w-6xl pt-[8.5rem] md:p-6 md:pt-24 lg:max-w-7xl lg:pt-24">
+          <main className="flex flex-col gap-6">
+            <div className="min-w-0">
+              <div className="hidden lg:block">
+                <CategoryTabs />
+              </div>
+              <div className="p-4 md:p-0">
+                <div className="hidden lg:block">
+                  <ProductosTop />
+                </div>
+                <MenuList />
+              </div>
+            </div>
+          </main>
+        </div>
       </div>
       <CartBottomBar />
+      <div className="hidden lg:block">
+        <CartDrawer
+          isOpen={cartDrawerOpen}
+          onClose={() => setCartDrawerOpen(false)}
+        />
+      </div>
     </>
   );
 }

@@ -51,26 +51,35 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
     <>
       <button
         type="button"
-        className="drawer-overlay fixed inset-0 z-40 bg-black/50"
+        className="drawer-overlay fixed inset-0 z-[1000] bg-black/70 md:bg-black/60"
         aria-label="Cerrar"
         onClick={onClose}
       />
       <div
-        className="drawer-panel fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-xl border-t border-ui-border bg-white shadow-lg safe-area-bottom md:inset-auto md:left-1/2 md:right-auto md:top-1/2 md:max-h-[90vh] md:w-full md:max-w-sm md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl md:border"
+        className="drawer-panel fixed inset-0 z-[1001] flex flex-col overflow-hidden bg-white md:inset-auto md:left-1/2 md:top-1/2 md:max-h-[90vh] md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-ui-border md:shadow-xl"
         role="dialog"
         aria-labelledby="personaliza-title"
       >
-        <div className="sticky top-0 z-10 border-b border-ui-border bg-white px-4 py-3">
+        <div className="relative shrink-0 bg-white px-4 py-3 md:border-b md:border-ui-border md:px-6">
           <h2
             id="personaliza-title"
-            className="text-lg font-semibold text-ui-main"
+            className="pr-10 text-lg font-semibold text-ui-main md:pr-0"
           >
             Personaliza tu pedido
           </h2>
           <p className="mt-0.5 text-sm text-ui-muted">{item.name}</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="btn-transition absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-ui-muted hover:bg-ui-border hover:text-ui-main md:right-6 md:top-4"
+            aria-label="Cerrar sin añadir"
+          >
+            <span className="text-xl leading-none">×</span>
+          </button>
         </div>
 
-        <div className="space-y-4 p-4">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <div className="space-y-4 p-4 md:p-6">
           <label className="flex cursor-pointer items-center justify-between gap-3">
             <span className="text-sm font-medium text-ui-main">
               {isHamburger(item) ? "Papas extra grande" : "Añadir papas"}
@@ -162,12 +171,13 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
               })}
             </div>
           </div>
+          </div>
         </div>
 
-        <div className="sticky bottom-0 border-t border-ui-border bg-white p-4 safe-area-bottom">
+        <div className="shrink-0 bg-white px-4 pt-4 pb-6 safe-area-bottom md:border-t md:border-ui-border md:px-6 md:pb-6">
           <button
             type="button"
-            className="btn-transition w-full rounded-lg bg-ui-primary px-4 py-3 font-medium text-white hover:opacity-90 active:scale-[0.98]"
+            className="btn-transition w-full rounded-xl bg-ui-primary px-4 py-3 font-medium text-white hover:opacity-90 active:scale-[0.98]"
             onClick={handleAdd}
           >
             Añadir al carrito
