@@ -34,13 +34,13 @@ export default function CartBottomBar() {
         <div className="safe-area-bottom mx-auto flex max-w-6xl items-center justify-between gap-4 p-4">
           <div>
             <div className="text-sm text-ui-muted">{count} prod</div>
-            <div className="font-semibold text-ui-main">
+            <div className="font-semibold text-ui-text">
               Total: {formatCOP(total)}
             </div>
           </div>
           <button
             type="button"
-            className="btn-transition rounded-lg bg-ui-primary px-4 py-2 font-medium text-white hover:opacity-90 active:scale-[0.98]"
+            className="btn-transition rounded-lg bg-ui-primary px-4 py-2 font-medium text-gray-900 hover:opacity-90 active:scale-[0.98]"
             onClick={() => setIsOpen(true)}
           >
             Ver pedido
@@ -62,10 +62,10 @@ export default function CartBottomBar() {
             aria-label="Tu pedido"
           >
             <div className="sticky top-0 flex items-center justify-between border-b border-ui-border bg-white px-4 py-3">
-              <h2 className="text-lg font-semibold text-ui-main">Tu pedido</h2>
+              <h2 className="text-lg font-semibold text-ui-text">Tu pedido</h2>
               <button
                 type="button"
-                className="btn-transition rounded p-1.5 text-ui-muted hover:bg-ui-border hover:text-ui-main active:opacity-70"
+                className="btn-transition rounded p-1.5 text-ui-muted hover:bg-ui-border hover:text-ui-text active:opacity-70"
                 onClick={() => setIsOpen(false)}
                 aria-label="Cerrar"
               >
@@ -85,7 +85,7 @@ export default function CartBottomBar() {
                       className="flex items-center justify-between gap-2 border-b border-ui-border pb-3 last:border-0 last:pb-0"
                     >
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-medium text-ui-main">
+                        <div className="truncate text-sm font-medium text-ui-text">
                           {name}
                         </div>
                         {modifierLabels.length > 0 && (
@@ -102,7 +102,7 @@ export default function CartBottomBar() {
                       <div className="flex shrink-0 items-center gap-1">
                         <button
                           type="button"
-                          className="btn-transition flex h-8 w-8 items-center justify-center rounded border border-ui-border text-ui-main hover:bg-ui-border active:scale-95"
+                          className="btn-transition flex h-8 w-8 items-center justify-center rounded border border-ui-border text-ui-text hover:bg-ui-border active:scale-95"
                           onClick={() => dec(it.lineId)}
                           aria-label="Menos"
                         >
@@ -113,7 +113,7 @@ export default function CartBottomBar() {
                         </span>
                         <button
                           type="button"
-                          className="btn-transition flex h-8 w-8 items-center justify-center rounded border border-ui-border text-ui-main hover:bg-ui-border active:scale-95"
+                          className="btn-transition flex h-8 w-8 items-center justify-center rounded border border-ui-border text-ui-text hover:bg-ui-border active:scale-95"
                           onClick={() => inc(it.lineId)}
                           aria-label="Más"
                         >
@@ -121,7 +121,7 @@ export default function CartBottomBar() {
                         </button>
                         <button
                           type="button"
-                          className="btn-transition ml-1 text-xs text-ui-muted underline hover:text-ui-main active:opacity-70"
+                          className="btn-transition ml-1 text-xs text-ui-muted underline hover:text-ui-text active:opacity-70"
                           onClick={() => remove(it.lineId)}
                         >
                           Quitar
@@ -131,12 +131,12 @@ export default function CartBottomBar() {
                   );
                 })}
               </ul>
-              <div className="mt-4 flex items-center justify-between border-t border-ui-border pt-3 font-semibold text-ui-main">
+              <div className="mt-4 flex items-center justify-between border-t border-ui-border pt-3 font-semibold text-ui-text">
                 <span>Total</span>
                 <span>{formatCOP(total)}</span>
               </div>
               <Link
-                className="btn-transition mt-4 block w-full rounded-lg bg-ui-primary py-3 text-center font-medium text-white hover:opacity-90 active:scale-[0.99]"
+                className="btn-transition mt-4 block w-full rounded-lg bg-ui-primary py-3 text-center font-medium text-gray-900 hover:opacity-90 active:scale-[0.99]"
                 href="/checkout"
                 onClick={() => setIsOpen(false)}
               >

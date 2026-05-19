@@ -1,24 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { MENU } from "@/data/menu";
-
-function categoryToId(cat: string): string {
-  return cat
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/&/g, "y")
-    .replace(/ñ/g, "n");
-}
-
-const REGANADOS = "Regañados";
-
-function orderedCategories(): string[] {
-  const all = Array.from(new Set(MENU.map((i) => i.category)));
-  const reg = all.filter((c) => c === REGANADOS);
-  const rest = all.filter((c) => c !== REGANADOS);
-  return [...rest, ...reg];
-}
+import { categoryToId, orderedCategories } from "@/lib/categories";
 
 export default function CategoryTabs() {
   const categories = orderedCategories();
@@ -71,7 +54,7 @@ export default function CategoryTabs() {
           type="button"
           onClick={() => scroll("left")}
           disabled={!canScrollLeft}
-          className="btn-transition hidden shrink-0 rounded-lg border border-ui-border bg-white p-2 text-ui-main hover:bg-ui-border disabled:opacity-40 disabled:pointer-events-none lg:flex"
+          className="btn-transition hidden shrink-0 rounded-lg border border-ui-border bg-white p-2 text-ui-text hover:bg-ui-border disabled:opacity-40 disabled:pointer-events-none lg:flex"
           aria-label="Desplazar categorías a la izquierda"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -86,7 +69,7 @@ export default function CategoryTabs() {
             <button
               key={cat}
               type="button"
-              className="btn-transition shrink-0 rounded-lg border border-ui-border bg-white px-4 py-2 text-sm font-medium text-ui-main hover:bg-ui-border active:scale-[0.98] md:px-5"
+              className="btn-transition shrink-0 rounded-lg border border-ui-border bg-white px-4 py-2 text-sm font-medium text-ui-text hover:bg-ui-border active:scale-[0.98] md:px-5"
               onClick={() => handleClick(cat)}
             >
               {cat}
@@ -97,7 +80,7 @@ export default function CategoryTabs() {
           type="button"
           onClick={() => scroll("right")}
           disabled={!canScrollRight}
-          className="btn-transition hidden shrink-0 rounded-lg border border-ui-border bg-white p-2 text-ui-main hover:bg-ui-border disabled:opacity-40 disabled:pointer-events-none lg:flex"
+          className="btn-transition hidden shrink-0 rounded-lg border border-ui-border bg-white p-2 text-ui-text hover:bg-ui-border disabled:opacity-40 disabled:pointer-events-none lg:flex"
           aria-label="Desplazar categorías a la derecha"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>

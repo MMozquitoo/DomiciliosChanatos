@@ -44,10 +44,10 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
         aria-label="Carrito de compras"
       >
         <div className="flex items-center justify-between border-b border-ui-border p-4">
-          <h2 className="text-lg font-semibold text-ui-main">Tu pedido</h2>
+          <h2 className="text-lg font-semibold text-ui-text">Tu pedido</h2>
           <button
             type="button"
-            className="btn-transition flex h-10 w-10 items-center justify-center rounded-full border border-ui-border text-ui-main hover:bg-ui-border"
+            className="btn-transition flex h-10 w-10 items-center justify-center rounded-full border border-ui-border text-ui-text hover:bg-ui-border"
             onClick={onClose}
             aria-label="Cerrar"
           >
@@ -74,7 +74,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
                     className="flex items-center justify-between gap-3 border-b border-ui-border pb-4 last:border-0 last:pb-0"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="truncate font-medium text-ui-main">
+                      <div className="truncate font-medium text-ui-text">
                         {name}
                       </div>
                       {modifierLabels.length > 0 && (
@@ -91,18 +91,18 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
                     <div className="flex shrink-0 items-center gap-2">
                       <button
                         type="button"
-                        className="btn-transition flex h-9 w-9 items-center justify-center rounded border border-ui-border text-ui-main hover:bg-ui-border active:scale-95"
+                        className="btn-transition flex h-9 w-9 items-center justify-center rounded border border-ui-border text-ui-text hover:bg-ui-border active:scale-95"
                         onClick={() => dec(it.lineId)}
                         aria-label="Menos"
                       >
                         −
                       </button>
-                      <span className="w-6 text-center font-medium text-ui-main">
+                      <span className="w-6 text-center font-medium text-ui-text">
                         {it.qty}
                       </span>
                       <button
                         type="button"
-                        className="btn-transition flex h-9 w-9 items-center justify-center rounded border border-ui-border text-ui-main hover:bg-ui-border active:scale-95"
+                        className="btn-transition flex h-9 w-9 items-center justify-center rounded border border-ui-border text-ui-text hover:bg-ui-border active:scale-95"
                         onClick={() => inc(it.lineId)}
                         aria-label="Más"
                       >
@@ -110,7 +110,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
                       </button>
                       <button
                         type="button"
-                        className="btn-transition ml-1 text-xs text-ui-muted underline hover:text-ui-main"
+                        className="btn-transition ml-1 text-xs text-ui-muted underline hover:text-ui-text"
                         onClick={() => remove(it.lineId)}
                       >
                         Quitar
@@ -125,12 +125,12 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
 
         {items.length > 0 && (
           <div className="border-t border-ui-border p-4">
-            <div className="mb-4 flex items-center justify-between font-semibold text-ui-main">
+            <div className="mb-4 flex items-center justify-between font-semibold text-ui-text">
               <span>Total</span>
               <span>{formatCOP(total)}</span>
             </div>
             <Link
-              className="btn-transition block w-full rounded-lg bg-ui-primary py-3 text-center font-medium text-white hover:opacity-90 active:scale-[0.99]"
+              className="btn-transition block w-full rounded-lg bg-ui-primary py-3 text-center font-medium text-gray-900 hover:opacity-90 active:scale-[0.99]"
               href="/checkout"
               onClick={onClose}
             >

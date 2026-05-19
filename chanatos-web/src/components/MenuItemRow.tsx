@@ -125,7 +125,7 @@ export default function MenuItemRow({ item }: Props) {
           onPointerLeave={!isDesktop && hasDescription ? handlePointerLeave : undefined}
           onPointerCancel={!isDesktop && hasDescription ? handlePointerLeave : undefined}
         >
-          <div className="font-semibold text-ui-main">{item.name}</div>
+          <div className="font-semibold text-ui-text">{item.name}</div>
           {item.description ? (
             <>
               {/* Mobile: hint para mantener presionado; Desktop: descripción visible */}
@@ -139,7 +139,7 @@ export default function MenuItemRow({ item }: Props) {
               </p>
             </>
           ) : null}
-          <div className="mt-1.5 font-semibold text-ui-main">
+          <div className="mt-1.5 font-semibold text-ui-text">
             {item.price != null
               ? formatCOP(item.price)
               : item.basePrice != null && item.basePrice > 0
@@ -183,7 +183,7 @@ export default function MenuItemRow({ item }: Props) {
               type="button"
               className={
                 canAdd
-                  ? "btn-transition rounded-lg border border-ui-primary bg-ui-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 active:scale-95"
+                  ? "btn-transition rounded-lg border border-ui-primary bg-ui-primary px-4 py-2 text-sm font-medium text-gray-900 hover:opacity-90 active:scale-95"
                   : "cursor-not-allowed rounded-lg border border-ui-border bg-white px-4 py-2 text-sm font-medium text-ui-muted"
               }
               onClick={() => canAdd && setShowOptionsModal(true)}
@@ -199,14 +199,14 @@ export default function MenuItemRow({ item }: Props) {
               <>
                 <button
                   type="button"
-                  className="btn-transition flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ui-border bg-white text-ui-main hover:bg-ui-border active:scale-95"
+                  className="btn-transition flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ui-border bg-white text-ui-text hover:bg-ui-border active:scale-95"
                   onClick={handleDec}
                   aria-label={`Quitar una unidad de ${item.name}`}
                 >
                   −
                 </button>
                 <span
-                  className="min-w-[1.5rem] text-center text-sm font-semibold text-ui-main"
+                  className="min-w-[1.5rem] text-center text-sm font-semibold text-ui-text"
                   aria-label={`Cantidad: ${qtyInCart}`}
                 >
                   {qtyInCart}
@@ -217,7 +217,7 @@ export default function MenuItemRow({ item }: Props) {
               type="button"
               className={
                 canAdd
-                  ? "btn-transition flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ui-primary bg-ui-primary text-lg font-medium leading-none text-white hover:opacity-90 active:scale-95"
+                  ? "btn-transition flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ui-primary bg-ui-primary text-lg font-medium leading-none text-gray-900 hover:opacity-90 active:scale-95"
                   : "flex h-9 w-9 shrink-0 cursor-not-allowed items-center justify-center rounded-full border border-ui-border bg-white text-ui-muted"
               }
               onClick={handleAddDirect}
@@ -247,7 +247,7 @@ export default function MenuItemRow({ item }: Props) {
           >
             <div className="h-32 bg-ui-border md:h-48" aria-hidden />
             <div className="p-4">
-              <h3 id="item-desc-title" className="font-semibold text-ui-main">
+              <h3 id="item-desc-title" className="font-semibold text-ui-text">
                 {item.name}
               </h3>
               <p id="item-desc-text" className="mt-2 text-sm text-ui-muted">
@@ -255,7 +255,7 @@ export default function MenuItemRow({ item }: Props) {
               </p>
               <button
                 type="button"
-                className="btn-transition mt-4 w-full rounded-lg border border-ui-border py-2 text-sm font-medium text-ui-main hover:bg-ui-border"
+                className="btn-transition mt-4 w-full rounded-lg border border-ui-border py-2 text-sm font-medium text-ui-text hover:bg-ui-border"
                 onClick={() => setShowDescription(false)}
               >
                 Cerrar

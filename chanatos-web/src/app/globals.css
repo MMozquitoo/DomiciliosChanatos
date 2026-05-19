@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-ui-bg text-ui-main antialiased;
+  @apply bg-ui-bg text-ui-text antialiased;
 }
 
 @layer utilities {
@@ -51,13 +51,3 @@ body {
   animation: slideUp 0.2s ease-out;
 }
 
-@keyframes heroFadeSlide {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}

@@ -63,7 +63,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
         <div className="relative shrink-0 bg-white px-4 py-3 md:border-b md:border-ui-border md:px-6">
           <h2
             id="personaliza-title"
-            className="pr-10 text-lg font-semibold text-ui-main md:pr-0"
+            className="pr-10 text-lg font-semibold text-ui-text md:pr-0"
           >
             Personaliza tu pedido
           </h2>
@@ -71,7 +71,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="btn-transition absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-ui-muted hover:bg-ui-border hover:text-ui-main md:right-6 md:top-4"
+            className="btn-transition absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-ui-muted hover:bg-ui-border hover:text-ui-text md:right-6 md:top-4"
             aria-label="Cerrar sin añadir"
           >
             <span className="text-xl leading-none">×</span>
@@ -81,7 +81,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
         <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="space-y-4 p-4 md:p-6">
           <label className="flex cursor-pointer items-center justify-between gap-3">
-            <span className="text-sm font-medium text-ui-main">
+            <span className="text-sm font-medium text-ui-text">
               {isHamburger(item) ? "Papas extra grande" : "Añadir papas"}
             </span>
             <span className="text-sm text-ui-muted">
@@ -147,7 +147,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
                     : "border-ui-border bg-white hover:border-ui-main/30"
                 }`}
               >
-                <span className="font-medium text-ui-main">Ninguna</span>
+                <span className="font-medium text-ui-text">Ninguna</span>
               </button>
               {BEBIDAS.map((b) => {
                 const selected = drinkId === b.id;
@@ -162,7 +162,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
                         : "border-ui-border bg-white hover:border-ui-main/30"
                     }`}
                   >
-                    <span className="font-medium text-ui-main">{b.name}</span>
+                    <span className="font-medium text-ui-text">{b.name}</span>
                     <span className="mt-0.5 text-sm text-ui-muted">
                       {formatCOP(b.price ?? 0)}
                     </span>
@@ -177,7 +177,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
         <div className="shrink-0 bg-white px-4 pt-4 pb-6 safe-area-bottom md:border-t md:border-ui-border md:px-6 md:pb-6">
           <button
             type="button"
-            className="btn-transition w-full rounded-xl bg-ui-primary px-4 py-3 font-medium text-white hover:opacity-90 active:scale-[0.98]"
+            className="btn-transition w-full rounded-xl bg-ui-primary px-4 py-3 font-medium text-gray-900 hover:opacity-90 active:scale-[0.98]"
             onClick={handleAdd}
           >
             Añadir al carrito

@@ -15,7 +15,7 @@ export default function Header({ onOpenCart }: Props) {
     <header className="shrink-0 border-b border-ui-border bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
         <div>
-          <h1 className="text-2xl font-bold text-ui-main md:text-3xl">
+          <h1 className="text-2xl font-bold text-ui-text md:text-3xl">
             Chanatos Burger
           </h1>
           <p className="mt-1 text-sm text-ui-muted">
@@ -36,7 +36,7 @@ export default function Header({ onOpenCart }: Props) {
             className="object-contain"
           />
           {count > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-ui-primary px-1 text-xs font-semibold text-white">
+            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-ui-primary px-1 text-xs font-semibold text-gray-900">
               {count > 99 ? "99+" : count}
             </span>
           )}

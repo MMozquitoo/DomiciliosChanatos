@@ -24,7 +24,7 @@ export default function ProductosTop() {
       >
         <h2
           id="productos-top-title"
-          className="mb-4 text-lg font-semibold text-ui-main"
+          className="mb-4 text-lg font-semibold text-ui-text"
         >
           Productos top
         </h2>
@@ -45,7 +45,7 @@ export default function ProductosTop() {
                 className="flex w-[180px] shrink-0 flex-col rounded-xl border border-ui-border bg-white p-4 shadow-sm"
               >
                 <div className="min-h-[80px] rounded-lg bg-ui-border" aria-hidden />
-                <div className="mt-3 font-semibold text-ui-main">
+                <div className="mt-3 font-semibold text-ui-text">
                   {item.name}
                 </div>
                 <div className="mt-1 text-sm text-ui-muted">
@@ -53,7 +53,7 @@ export default function ProductosTop() {
                 </div>
                 <button
                   type="button"
-                  className="btn-transition mt-3 flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full bg-ui-primary text-lg font-medium text-white hover:opacity-90 active:scale-95 disabled:opacity-50"
+                  className="btn-transition mt-3 flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full bg-ui-primary text-lg font-medium text-gray-900 hover:opacity-90 active:scale-95 disabled:opacity-50"
                   onClick={() => canAdd && setOpenId(item.id)}
                   disabled={!canAdd}
                   aria-label={canAdd ? `Agregar ${item.name}` : "No disponible"}

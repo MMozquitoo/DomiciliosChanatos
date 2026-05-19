@@ -1,0 +1,16 @@
+{
+  "name": "Chanatos Burger",
+  "short_name": "Chanatos",
+  "description": "Menu digital y pedidos a domicilio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8E7",
+  "theme_color": "#F5BB4C",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

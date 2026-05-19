@@ -9,12 +9,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Chanatos Burger | Menú digital",
+  title: "Chanatos Burger | Pide a domicilio",
   description:
-    "Hamburguesas con esencia propia. Sabor, experiencia y diseño. Menú digital y pedido por WhatsApp.",
-  icons: {
-    icon: "/favicon.ico",
+    "Pide tus hamburguesas y platos favoritos de Chanatos Burger. Menu digital con envio por WhatsApp. Domicilios y para recoger.",
+  keywords: ["chanatos", "burger", "hamburguesas", "domicilios", "menu digital"],
+  openGraph: {
+    title: "Chanatos Burger | Pide a domicilio",
+    description:
+      "Pide tus hamburguesas y platos favoritos de Chanatos Burger.",
+    type: "website",
+    locale: "es_CO",
   },
+  icons: {
+    icon: "/favicon.svg",
+  },
+  manifest: "/manifest.json",
 };
 
 export const viewport = {

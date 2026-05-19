@@ -31,6 +31,7 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [error, setError] = useState("");
 
   const PAYMENT_OPTIONS = ["Efectivo", "Transferencia", "Nequi", "Daviplata"];
 
@@ -40,20 +41,29 @@ export default function CheckoutPage() {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
 
   function onSend() {
+    setError("");
     if (!whatsappNumber) {
-      alert("Falta configurar NEXT_PUBLIC_WHATSAPP_NUMBER");
+      setError("Falta configurar NEXT_PUBLIC_WHATSAPP_NUMBER");
       return;
     }
     if (!name.trim()) {
-      alert("Escribe tu nombre");
+      setError("Escribe tu nombre");
+      return;
+    }
+    if (service === "delivery" && !address.trim()) {
+      setError("La dirección es obligatoria para domicilios");
+      return;
+    }
+    if (phone && phone.replace(/\D/g, "").length < 7) {
+      setError("El número de teléfono no es válido");
       return;
     }
     if (items.length === 0) {
-      alert("Tu carrito está vacío");
+      setError("Tu carrito está vacío");
       return;
     }
     if (!paymentMethod.trim()) {
-      alert("Selecciona forma de pago");
+      setError("Selecciona forma de pago");
       return;
     }
 
@@ -86,6 +96,12 @@ export default function CheckoutPage() {
           Volver al menú
         </Link>
       </header>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Panel Resumen */}

@@ -11,10 +11,13 @@ const config: Config = {
       colors: {
         ui: {
           bg: "#FFFFFF",
-          main: "#111827",
+          main: "#D4A03A",
           muted: "#6B7280",
           border: "#E5E7EB",
-          primary: "#111827",
+          primary: "#F5BB4C",
+          "primary-dark": "#D4A03A",
+          "primary-light": "#FFF8E7",
+          text: "#111827",
           whatsapp: "#22C55E",
         },
       },

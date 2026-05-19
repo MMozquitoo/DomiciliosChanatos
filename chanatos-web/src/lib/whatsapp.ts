@@ -1,6 +1,7 @@
 import type { MenuItem } from "@/data/menu";
 import type { CartLine } from "@/lib/cartStore";
 import { calcLineTotal, calcCartTotal, getLineModifierLabels } from "./pricing";
+import { formatCOP } from "./money";
 
 /** Número fijo para WhatsApp (fallback o .env). */
 export const WHATSAPP_NUMBER = "573162440710";
@@ -20,8 +21,6 @@ export function buildWhatsAppMessage(args: {
   fulfillment: Fulfillment;
   notes?: string;
   paymentMethod?: string;
-  sauces?: string[];
-  picante?: boolean;
   items: CartLine[];
   menuById: Record<string, MenuItem>;
 }) {
@@ -30,8 +29,6 @@ export function buildWhatsAppMessage(args: {
     fulfillment,
     notes,
     paymentMethod,
-    sauces,
-    picante,
     items,
     menuById,
   } = args;
@@ -59,8 +56,6 @@ export function buildWhatsAppMessage(args: {
   }
 
   if (paymentMethod?.trim()) lines.push(`Pago: ${paymentMethod.trim()}`);
-  if (sauces?.length) lines.push(`Salsas: ${sauces.join(", ")}`);
-  if (picante) lines.push("Picante: Sí");
 
   if (notes?.trim()) lines.push(`Notas: ${notes.trim()}`);
 
@@ -71,7 +66,7 @@ export function buildWhatsAppMessage(args: {
     const menuItem = menuById[it.productId];
     const name = menuItem?.name ?? it.productId;
     const lineTotal = calcLineTotal(it, menuById);
-    lines.push(`- ${it.qty}x ${name} ($${lineTotal})`);
+    lines.push(`- ${it.qty}x ${name} (${formatCOP(lineTotal)})`);
     const modifierLabels = getLineModifierLabels(it, menuById);
     for (const label of modifierLabels) {
       lines.push(`  + ${label}`);
@@ -80,7 +75,7 @@ export function buildWhatsAppMessage(args: {
 
   const total = calcCartTotal(items, menuById);
   lines.push("");
-  lines.push(`Total: $${total}`);
+  lines.push(`Total: ${formatCOP(total)}`);
 
   return lines.join("\n");
 }
