@@ -33,6 +33,7 @@ from agent.web_orders import (
     listar_pedidos_pendientes,
     marcar_pedido_recibido,
 )
+from agent.pos_status import obtener_estado, reportar_estado
 
 load_dotenv()
 
@@ -264,3 +265,24 @@ async def confirmar_pedido_web_handler(pedido_id: int, request: Request):
     if not encontrado:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
     return {"status": "ok"}
+
+
+# ── Estado de caja del POS ──────────────────────────────────────────────────
+
+
+@app.post("/pos-status")
+async def reportar_estado_pos_handler(request: Request):
+    """El POS llama aca en cada ciclo de poll para reportar si la caja esta abierta."""
+    _verificar_secreto_web_orders(request)
+    data = await request.json()
+    await reportar_estado(bool(data.get("isOpen")))
+    return {"status": "ok"}
+
+
+@app.get("/pos-status")
+async def obtener_estado_pos_handler():
+    """
+    Publico (sin secreto): la web lo consulta antes de dejar hacer un pedido.
+    No expone nada sensible, solo un booleano y una marca de tiempo.
+    """
+    return await obtener_estado()

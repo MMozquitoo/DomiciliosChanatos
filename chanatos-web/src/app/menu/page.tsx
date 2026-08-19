@@ -9,14 +9,14 @@ import CartBottomBar from "@/components/CartBottomBar";
 import CartDrawer from "@/components/CartDrawer";
 import Toast from "@/components/Toast";
 import { useCart } from "@/lib/cartStore";
-import { isOpenNow } from "@/lib/hours";
+import { useCanOrder } from "@/lib/useCanOrder";
 
 export default function MenuPage() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [toast, setToast] = useState("");
   const itemCount = useCart((s) => s.items.length);
   const prevCount = useRef(itemCount);
-  const open = isOpenNow(new Date());
+  const open = useCanOrder();
 
   useEffect(() => {
     if (itemCount > prevCount.current) {

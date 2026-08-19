@@ -10,7 +10,7 @@ import {
   getLineModifierLabels,
 } from "@/lib/pricing";
 import { buildWhatsAppLink, buildWhatsAppMessage } from "@/lib/whatsapp";
-import { isOpenNow } from "@/lib/hours";
+import { useCanOrder } from "@/lib/useCanOrder";
 import Link from "next/link";
 
 export default function CheckoutPage() {
@@ -37,7 +37,7 @@ export default function CheckoutPage() {
 
   const total = calcCartTotal(items, menuById);
 
-  const openNow = isOpenNow(new Date());
+  const openNow = useCanOrder();
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
 
   function onSend() {
