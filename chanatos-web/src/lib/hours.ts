@@ -51,9 +51,11 @@ function getColombiaDayAndTime(date: Date): {
 /**
  * Indica si el local está abierto en la fecha/hora dada (hora Colombia).
  */
-export function isOpenNow(date: Date): boolean {
-  const { day, timeInHours } = getColombiaDayAndTime(date);
-
-  if (day === CLOSED_DAY) return false;
-  return timeInHours >= OPEN_HOUR_START && timeInHours < OPEN_HOUR_END;
+export function isOpenNow(_date: Date): boolean {
+  // TEMPORAL — restricción de horario desactivada para pruebas. Revertir antes de producción real.
+  // Lógica original:
+  // const { day, timeInHours } = getColombiaDayAndTime(date);
+  // if (day === CLOSED_DAY) return false;
+  // return timeInHours >= OPEN_HOUR_START && timeInHours < OPEN_HOUR_END;
+  return true;
 }
