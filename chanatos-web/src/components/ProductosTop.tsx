@@ -6,7 +6,12 @@ import { useCart } from "@/lib/cartStore";
 import { formatCOP } from "@/lib/money";
 import AddToCartModal from "@/components/AddToCartModal";
 
-const TOP_IDS = ["la-chanata", "papa-loka", "doble-carne", "sandwich-chanatun"];
+const TOP_IDS = [
+  "hamburguesa-chanata",
+  "papa-loka",
+  "hamburguesa-doble-carne",
+  "sandwich-pollo",
+];
 
 export default function ProductosTop() {
   const addLine = useCart((s) => s.addLine);

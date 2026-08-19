@@ -9,10 +9,5 @@ export function categoryToId(cat: string): string {
 }
 
 export function orderedCategories(): string[] {
-  const tail = "Regañados";
-  const all = Array.from(new Set(MENU.map((i) => i.category)));
-  return [
-    ...all.filter((c) => c !== tail),
-    ...all.filter((c) => c === tail),
-  ];
+  return Array.from(new Set(MENU.map((i) => i.category)));
 }
