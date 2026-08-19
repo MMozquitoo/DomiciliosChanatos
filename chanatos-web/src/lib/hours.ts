@@ -1,13 +1,13 @@
 /**
  * Horario por defecto (sin APIs externas).
- * Martes a domingo: 18:00 a 23:00 (hora Colombia).
+ * Martes a domingo: 18:00 a 22:00 (hora Colombia).
  * Solo cerrado los lunes.
  */
 
 const TIMEZONE_COLOMBIA = "America/Bogota";
 const CLOSED_DAY = 1; // Lunes (0 = domingo, 1 = lunes, ...)
 const OPEN_HOUR_START = 18; // 18:00
-const OPEN_HOUR_END = 23; // 23:00 (exclusive)
+const OPEN_HOUR_END = 22; // 22:00 (exclusive)
 
 /** Obtiene día (0–6) y hora en zona Colombia a partir de una fecha. */
 function getColombiaDayAndTime(date: Date): {
@@ -51,11 +51,9 @@ function getColombiaDayAndTime(date: Date): {
 /**
  * Indica si el local está abierto en la fecha/hora dada (hora Colombia).
  */
-export function isOpenNow(_date: Date): boolean {
-  // TEMPORAL — restricción de horario desactivada para pruebas. Revertir antes de producción real.
-  // Lógica original:
-  // const { day, timeInHours } = getColombiaDayAndTime(date);
-  // if (day === CLOSED_DAY) return false;
-  // return timeInHours >= OPEN_HOUR_START && timeInHours < OPEN_HOUR_END;
-  return true;
+export function isOpenNow(date: Date): boolean {
+  const { day, timeInHours } = getColombiaDayAndTime(date);
+
+  if (day === CLOSED_DAY) return false;
+  return timeInHours >= OPEN_HOUR_START && timeInHours < OPEN_HOUR_END;
 }
