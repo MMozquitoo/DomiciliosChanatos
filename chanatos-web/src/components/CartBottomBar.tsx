@@ -30,7 +30,7 @@ export default function CartBottomBar() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-ui-border bg-white lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-ui-border bg-white">
         <div className="safe-area-bottom mx-auto flex max-w-6xl items-center justify-between gap-4 p-4">
           <div>
             <div className="text-sm text-ui-muted">{count} prod</div>

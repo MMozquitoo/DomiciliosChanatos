@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const LANDING_YELLOW = "#F5BB4C";
+const LANDING_YELLOW = "#E3A73D";
 
 export default function HomePage() {
   return (
