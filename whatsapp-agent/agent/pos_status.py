@@ -8,7 +8,7 @@ consulta esto antes de dejar hacer un pedido: sin caja abierta no hay
 quien lo atienda del otro lado.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column
@@ -51,7 +51,14 @@ async def obtener_estado() -> dict:
     if estado is None:
         return {"isOpen": False, "updatedAt": None, "stale": True}
 
-    edad_segundos = (ahora() - estado.updated_at).total_seconds()
+    # SQLite (dev local) devuelve el datetime sin tzinfo aunque la columna
+    # sea timezone=True; Postgres si lo conserva. Normalizar antes de restar
+    # evita "can't subtract offset-naive and offset-aware datetimes".
+    updated_at = estado.updated_at
+    if updated_at.tzinfo is None:
+        updated_at = updated_at.replace(tzinfo=timezone.utc)
+
+    edad_segundos = (ahora() - updated_at).total_seconds()
     stale = edad_segundos > STALE_AFTER_SECONDS
 
     return {
