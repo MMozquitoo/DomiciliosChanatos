@@ -108,6 +108,8 @@ export default function CheckoutPage() {
     }).catch(() => {
       // silencioso a propósito
     });
+
+    clear();
   }
 
   function sendToWebOrdersQueue(payload: unknown) {
