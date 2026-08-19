@@ -81,6 +81,42 @@ export default function CheckoutPage() {
 
     const link = buildWhatsAppLink(whatsappNumber, message);
     window.open(link, "_blank", "noopener,noreferrer");
+
+    // Best-effort: si esto falla, el pedido igual se mandó por WhatsApp arriba.
+    // No bloquea ni muestra error al cliente — solo alimenta la cola que el
+    // POS del restaurante consulta para no tener que re-teclear el pedido.
+    sendToWebOrdersQueue({
+      customer: { name: name.trim(), phone: phone.trim() || undefined },
+      fulfillment:
+        service === "delivery"
+          ? { type: "delivery", address: address.trim() }
+          : { type: "pickup" },
+      paymentMethod: paymentMethod.trim(),
+      notes,
+      items: items.map((it) => {
+        const product = menuById[it.productId];
+        const modifierLabels = getLineModifierLabels(it, menuById);
+        return {
+          webId: it.productId,
+          name: product?.name ?? it.productId,
+          qty: it.qty,
+          unitPrice: calcLineTotal(it, menuById) / it.qty,
+          modifiersLabel: modifierLabels.join(", "),
+        };
+      }),
+      total,
+    }).catch(() => {
+      // silencioso a propósito
+    });
+  }
+
+  function sendToWebOrdersQueue(payload: unknown) {
+    return fetch("/api/web-orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
   }
 
   return (

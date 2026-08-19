@@ -7,6 +7,7 @@ Funciona con cualquier proveedor (Zernio, Meta) gracias a la capa de providers.
 """
 
 import asyncio
+import hmac
 import logging
 import os
 from collections import defaultdict
@@ -27,6 +28,11 @@ from agent.memory import (
 )
 from agent.providers import obtener_proveedor
 from agent.providers.base import MensajeEntrante
+from agent.web_orders import (
+    crear_pedido_web,
+    listar_pedidos_pendientes,
+    marcar_pedido_recibido,
+)
 
 load_dotenv()
 
@@ -44,6 +50,7 @@ logger = logging.getLogger("agentkit")
 logger.setLevel(logging.DEBUG if ENVIRONMENT == "development" else logging.INFO)
 
 PORT = int(os.getenv("PORT", "8000"))
+WEB_ORDERS_SECRET = os.getenv("WEB_ORDERS_SECRET", "")
 
 # Un candado por numero de telefono. En WhatsApp es normal que alguien mande "hola" y
 # medio segundo despues la pregunta de verdad: sin esto los dos mensajes se procesarian
@@ -207,3 +214,53 @@ async def procesar_mensaje(msg: MensajeEntrante):
                 await proveedor.enviar_mensaje(msg.telefono, obtener_mensaje_error(), msg.contexto)
             except Exception:  # noqa: BLE001
                 logger.error("Tampoco se pudo avisarle al cliente del error")
+
+
+# ── Cola de pedidos web (chanatos-web -> POS) ───────────────────────────────
+#
+# La web de domicilios manda el pedido aca; el POS del restaurante (que nunca
+# se expone a internet) lo consulta cada cierto tiempo. Las tres rutas estan
+# protegidas con un secreto compartido, no con sesion de usuario: quien llama
+# no es una persona sino la web o el POS.
+
+
+def _verificar_secreto_web_orders(request: Request):
+    """Compara X-Web-Orders-Secret contra WEB_ORDERS_SECRET con tiempo constante."""
+    if not WEB_ORDERS_SECRET:
+        logger.warning("WEB_ORDERS_SECRET no esta configurado: la cola de pedidos web esta desactivada")
+        raise HTTPException(status_code=503, detail="WEB_ORDERS_SECRET no configurado")
+
+    recibido = request.headers.get("X-Web-Orders-Secret", "")
+    try:
+        valido = hmac.compare_digest(recibido, WEB_ORDERS_SECRET)
+    except TypeError:
+        valido = False
+    if not valido:
+        raise HTTPException(status_code=401, detail="Secreto invalido")
+
+
+@app.post("/web-orders")
+async def crear_pedido_web_handler(request: Request):
+    """La web llama aca cuando un cliente hace un pedido."""
+    _verificar_secreto_web_orders(request)
+    data = await request.json()
+    pedido = await crear_pedido_web(data)
+    return pedido
+
+
+@app.get("/web-orders/pending")
+async def listar_pedidos_web_pendientes_handler(request: Request):
+    """El POS llama aca cada cierto tiempo para ver si hay pedidos nuevos."""
+    _verificar_secreto_web_orders(request)
+    pedidos = await listar_pedidos_pendientes()
+    return {"pedidos": pedidos}
+
+
+@app.post("/web-orders/{pedido_id}/ack")
+async def confirmar_pedido_web_handler(pedido_id: int, request: Request):
+    """El POS llama aca despues de crear la orden local con exito."""
+    _verificar_secreto_web_orders(request)
+    encontrado = await marcar_pedido_recibido(pedido_id)
+    if not encontrado:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+    return {"status": "ok"}
