@@ -11,6 +11,7 @@ SQLite en local, PostgreSQL en produccion.
 import logging
 import os
 from datetime import datetime, timedelta, timezone
+from urllib.parse import parse_qs, urlencode, urlsplit, urlunsplit
 
 from dotenv import load_dotenv
 from sqlalchemy import DateTime, Integer, String, Text, delete, select
@@ -23,23 +24,38 @@ logger = logging.getLogger("agentkit")
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./agentkit.db")
 
-# Railway entrega la URL de PostgreSQL con el esquema "postgresql://" (o "postgres://").
-# SQLAlchemy en modo asincrono necesita que el driver sea explicito.
+# Railway/Neon entregan la URL de PostgreSQL con el esquema "postgresql://" (o
+# "postgres://"). SQLAlchemy en modo asincrono necesita que el driver sea explicito.
 if DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 elif DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
 
-# En produccion, SQLite vive dentro del contenedor y el disco del contenedor es efimero:
-# cada redespliegue borra el historial de todas las conversaciones. Avisarlo fuerte, porque
-# el agente arranca igual y el problema recien se nota cuando un cliente vuelve a escribir.
+# Neon exige SSL y manda la URL con parametros de libpq/psycopg ("sslmode",
+# "channel_binding") que asyncpg no entiende — hay que sacarlos de la URL y
+# pasar el SSL como connect_args en su lugar, o falla al conectar.
+connect_args: dict = {}
+if DATABASE_URL.startswith("postgresql+asyncpg://"):
+    parsed = urlsplit(DATABASE_URL)
+    query = parse_qs(parsed.query)
+    if query.pop("sslmode", None):
+        connect_args["ssl"] = "require"
+    query.pop("channel_binding", None)
+    DATABASE_URL = urlunsplit(parsed._replace(query=urlencode(query, doseq=True)))
+
+# En produccion, SQLite vive dentro del contenedor/funcion y el disco es efimero:
+# cada redespliegue (o cada instancia nueva, en serverless) borra el historial de
+# todas las conversaciones. Avisarlo fuerte, porque el agente arranca igual y el
+# problema recien se nota cuando un cliente vuelve a escribir.
 if DATABASE_URL.startswith("sqlite") and os.getenv("ENVIRONMENT") == "production":
     logger.warning(
         "Estas en produccion con SQLite. El historial se va a borrar en cada redespliegue. "
         "Agrega PostgreSQL y configura DATABASE_URL para que el agente recuerde a sus clientes."
     )
 
-engine = create_async_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
+engine = create_async_engine(
+    DATABASE_URL, echo=False, pool_pre_ping=True, connect_args=connect_args
+)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 

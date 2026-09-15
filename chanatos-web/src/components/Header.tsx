@@ -15,9 +15,15 @@ export default function Header({ onOpenCart }: Props) {
     <header className="shrink-0 border-b border-ui-border bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
         <div>
-          <h1 className="text-2xl font-bold text-ui-text md:text-3xl">
-            Chanatos Burger
-          </h1>
+          <h1 className="sr-only">Chanatos Burger</h1>
+          <Image
+            src="/logo-chanatos.png"
+            alt="Chanatos"
+            width={1542}
+            height={570}
+            priority
+            className="h-auto w-[140px] md:w-[170px]"
+          />
           <p className="mt-1 text-sm text-ui-muted">
             Organiza tu pedido y envíalo por WhatsApp
           </p>
