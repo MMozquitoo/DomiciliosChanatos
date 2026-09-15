@@ -5,16 +5,17 @@ import { useCart } from "@/lib/cartStore";
 
 type Props = {
   onOpenCart: () => void;
+  open: boolean;
 };
 
-export default function Header({ onOpenCart }: Props) {
+export default function Header({ onOpenCart, open }: Props) {
   const items = useCart((s) => s.items);
   const count = items.reduce((acc, it) => acc + it.qty, 0);
 
   return (
     <header className="shrink-0 border-b border-ui-border bg-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
-        <div>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6 lg:max-w-7xl">
+        <div className="flex min-w-0 items-center gap-3">
           <h1 className="sr-only">Chanatos Burger</h1>
           <Image
             src="/logo-chanatos.png"
@@ -22,11 +23,17 @@ export default function Header({ onOpenCart }: Props) {
             width={1542}
             height={570}
             priority
-            className="h-auto w-[140px] md:w-[170px]"
+            className="h-auto w-[92px] shrink-0 md:w-[104px]"
           />
-          <p className="mt-1 text-sm text-ui-muted">
-            Organiza tu pedido y envíalo por WhatsApp
-          </p>
+          <span
+            className={`inline-flex shrink-0 items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              open
+                ? "bg-green-100 text-green-800"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {open ? "Abierto" : "Cerrado"}
+          </span>
         </div>
         <button
           type="button"
