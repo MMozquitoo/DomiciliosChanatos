@@ -193,7 +193,7 @@ export const MENU: MenuItem[] = [
     description: "Gaseosa Cuatro sabor toronja en botella personal.",
     category: "Bebidas",
     available: true,
-    price: 2000,
+    price: 4000,
     image: "/products/bebidas/cuatro-toronja-personal.jpg",
   },
   {
@@ -318,7 +318,7 @@ export const MENU: MenuItem[] = [
     description: "Cerveza lager de carácter más marcado.",
     category: "Bebidas",
     available: true,
-    price: 5000,
+    price: 6000,
     image: "/products/bebidas/cerveza-heineken.jpg",
   },
   {
@@ -327,8 +327,16 @@ export const MENU: MenuItem[] = [
     description: "Lager premium de cuerpo suave.",
     category: "Bebidas",
     available: true,
-    price: 6000,
+    price: 8000,
     image: "/products/bebidas/cerveza-corona.jpg",
+  },
+  {
+    id: "cerveza-club-colombia-dorada",
+    name: "Club Colombia Dorada",
+    description: "Lager dorada de cuerpo suave.",
+    category: "Bebidas",
+    available: true,
+    price: 6000,
   },
   // Bebidas - Jugos naturales y otros
   {

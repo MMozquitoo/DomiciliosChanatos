@@ -69,7 +69,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
         onClick={onClose}
       />
       <div
-        className="drawer-panel fixed inset-0 z-[1001] flex flex-col overflow-hidden bg-white md:inset-auto md:left-1/2 md:top-1/2 md:max-h-[90vh] md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-ui-border md:shadow-xl"
+        className="drawer-panel fixed inset-x-0 bottom-0 z-[1001] flex max-h-[88vh] flex-col overflow-hidden rounded-t-2xl bg-white md:inset-auto md:bottom-auto md:left-1/2 md:top-1/2 md:max-h-[90vh] md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-ui-border md:shadow-xl"
         role="dialog"
         aria-labelledby="personaliza-title"
       >
