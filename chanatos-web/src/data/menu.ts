@@ -285,13 +285,13 @@ export const MENU: MenuItem[] = [
     image: "/products/bebidas/mr-tea.jpg",
   },
   {
-    id: "agua-mia",
-    name: "Agua Mía 600ml",
-    description: "Agua potable tratada en presentación de 600 ml.",
+    id: "agua-botella",
+    name: "Agua 600ml",
+    description: "Agua potable tratada en botella personal de 600 ml.",
     category: "Bebidas",
     available: true,
     price: 3000,
-    image: "/products/bebidas/agua-mia.jpg",
+    image: "/products/bebidas/agua-botella.jpg",
   },
   // Bebidas - Cervezas
   {
