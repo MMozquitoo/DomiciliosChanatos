@@ -76,5 +76,24 @@ export function getLineModifierLabels(
   }
   if (mod.additions?.length)
     labels.push(`Adiciones: ${mod.additions.join(", ")}`);
+  if (mod.flavorId) {
+    const flavor = product?.flavors?.find((f) => f.id === mod.flavorId);
+    labels.push(`Sabor: ${flavor?.name ?? mod.flavorId}`);
+  }
   return labels;
+}
+
+/** Imagen a mostrar para una línea del carrito: la del sabor elegido si aplica, si no la del producto. */
+export function getLineImage(
+  line: CartLine,
+  menuById: Record<string, MenuItem>,
+): string | undefined {
+  const product = menuById[line.productId];
+  if (!product) return undefined;
+  const flavorId = line.modifiers?.flavorId;
+  if (flavorId) {
+    const flavor = product.flavors?.find((f) => f.id === flavorId);
+    if (flavor) return flavor.image;
+  }
+  return product.image;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { MENU } from "@/data/menu";
 import { useCart } from "@/lib/cartStore";
@@ -9,6 +10,7 @@ import {
   calcLineTotal,
   calcCartTotal,
   getLineModifierLabels,
+  getLineImage,
 } from "@/lib/pricing";
 
 export default function CartBottomBar() {
@@ -79,11 +81,23 @@ export default function CartBottomBar() {
                   const name = m?.name ?? it.productId;
                   const lineTotal = calcLineTotal(it, menuById);
                   const modifierLabels = getLineModifierLabels(it, menuById);
+                  const lineImage = getLineImage(it, menuById);
                   return (
                     <li
                       key={it.lineId}
                       className="flex items-center justify-between gap-2 border-b border-ui-border pb-3 last:border-0 last:pb-0"
                     >
+                      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-ui-border">
+                        {lineImage ? (
+                          <Image
+                            src={lineImage}
+                            alt=""
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        ) : null}
+                      </div>
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-medium text-ui-text">
                           {name}

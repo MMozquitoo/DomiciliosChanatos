@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 import { MENU } from "@/data/menu";
@@ -9,6 +10,7 @@ import {
   calcLineTotal,
   calcCartTotal,
   getLineModifierLabels,
+  getLineImage,
 } from "@/lib/pricing";
 
 type Props = {
@@ -68,11 +70,23 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
                 const name = m?.name ?? it.productId;
                 const lineTotal = calcLineTotal(it, menuById);
                 const modifierLabels = getLineModifierLabels(it, menuById);
+                const lineImage = getLineImage(it, menuById);
                 return (
                   <li
                     key={it.lineId}
                     className="flex items-center justify-between gap-3 border-b border-ui-border pb-4 last:border-0 last:pb-0"
                   >
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-ui-border">
+                      {lineImage ? (
+                        <Image
+                          src={lineImage}
+                          alt=""
+                          fill
+                          sizes="56px"
+                          className="object-cover"
+                        />
+                      ) : null}
+                    </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-medium text-ui-text">
                         {name}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { MenuItem } from "@/data/menu";
 import { BEBIDAS } from "@/data/menu";
 import type { CartLineModifiers } from "@/lib/cartStore";
@@ -18,17 +19,28 @@ const PAPAS_ADDON_OTHER = 5000;
 const ADDITION_PRICE = 1000;
 
 const isHamburger = (item: MenuItem) => item.category === "Hamburguesas";
+const isBebida = (item: MenuItem) => item.category === "Bebidas";
 
 type Props = {
   item: MenuItem;
-  onAdd: (modifiers?: CartLineModifiers) => void;
+  onAdd: (modifiers: CartLineModifiers | undefined, qty: number) => void;
   onClose: () => void;
 };
 
 export default function AddToCartModal({ item, onAdd, onClose }: Props) {
+  const hasFlavors = (item.flavors?.length ?? 0) > 0;
+  const bebida = isBebida(item);
+
   const [addPapas, setAddPapas] = useState(() => isHamburger(item));
   const [drinkId, setDrinkId] = useState<string | null>(null);
   const [additions, setAdditions] = useState<string[]>([]);
+  const [flavorId, setFlavorId] = useState<string | undefined>(
+    () => item.flavors?.[0]?.id,
+  );
+  const [qty, setQty] = useState(1);
+
+  const selectedFlavor = item.flavors?.find((f) => f.id === flavorId);
+  const previewImage = selectedFlavor?.image ?? item.image;
 
   function toggleAddition(name: string) {
     setAdditions((prev) =>
@@ -42,8 +54,9 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
       addPapas: addPapas || undefined,
       drinkId: drinkId ?? undefined,
       additions: additions.length > 0 ? [...additions] : undefined,
+      flavorId,
     };
-    onAdd(modifiers);
+    onAdd(modifiers, qty);
     onClose();
   }
 
@@ -80,97 +93,169 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
 
         <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="space-y-4 p-4 md:p-6">
-          <label className="flex cursor-pointer items-center justify-between gap-3">
-            <span className="text-sm font-medium text-ui-text">
-              {isHamburger(item) ? "Papas extra grande" : "Añadir papas"}
-            </span>
-            <span className="text-sm text-ui-muted">
-              {formatCOP(
-                isHamburger(item) ? PAPAS_ADDON_HAMBURGER : PAPAS_ADDON_OTHER,
-              )}
-            </span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={addPapas}
-              className={`btn-transition relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 transition-colors ${
-                addPapas
-                  ? "border-ui-primary bg-ui-primary"
-                  : "border-ui-border bg-white"
-              }`}
-              onClick={() => setAddPapas((prev) => !prev)}
-            >
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-ui-text">Cantidad</span>
+            <div className="flex items-center gap-3 rounded-full border border-ui-border px-1 py-1">
+              <button
+                type="button"
+                className="btn-transition flex h-9 w-9 items-center justify-center rounded-full text-ui-text hover:bg-ui-border active:scale-95 disabled:opacity-40"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                disabled={qty <= 1}
+                aria-label="Quitar una unidad"
+              >
+                −
+              </button>
               <span
-                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                  addPapas ? "translate-x-5" : "translate-x-0.5"
-                }`}
-              />
-            </button>
-          </label>
-
-          <div>
-            <span className="mb-2 block text-sm font-medium text-ui-muted">
-              Adiciones ({formatCOP(ADDITION_PRICE)} c/u)
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {ADDITIONS_OPTIONS.map((name) => {
-                const checked = additions.includes(name);
-                return (
-                  <label
-                    key={name}
-                    className="btn-transition flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors has-[:checked]:border-ui-primary has-[:checked]:bg-ui-primary/10"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => toggleAddition(name)}
-                      className="h-4 w-4 rounded border-ui-border text-ui-primary focus:ring-ui-primary"
-                    />
-                    {name}
-                  </label>
-                );
-              })}
+                className="min-w-[1.5rem] text-center font-semibold text-ui-text"
+                aria-label={`Cantidad: ${qty}`}
+              >
+                {qty}
+              </span>
+              <button
+                type="button"
+                className="btn-transition flex h-9 w-9 items-center justify-center rounded-full text-ui-text hover:bg-ui-border active:scale-95"
+                onClick={() => setQty((q) => q + 1)}
+                aria-label="Agregar una unidad"
+              >
+                +
+              </button>
             </div>
           </div>
 
-          <div>
-            <span className="mb-2 block text-sm font-medium text-ui-muted">
-              Bebida (opcional)
-            </span>
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
-              <button
-                type="button"
-                onClick={() => setDrinkId(null)}
-                className={`btn-transition flex flex-col items-start rounded-xl border-2 p-3 text-left transition-colors ${
-                  drinkId === null
-                    ? "border-ui-primary bg-ui-primary/5"
-                    : "border-ui-border bg-white hover:border-ui-main/30"
-                }`}
-              >
-                <span className="font-medium text-ui-text">Ninguna</span>
-              </button>
-              {BEBIDAS.map((b) => {
-                const selected = drinkId === b.id;
-                return (
+          {hasFlavors && (
+            <div>
+              {previewImage && (
+                <div className="relative mb-3 h-40 w-full overflow-hidden rounded-xl bg-black md:h-48">
+                  <Image
+                    key={previewImage}
+                    src={previewImage}
+                    alt={selectedFlavor?.name ?? item.name}
+                    fill
+                    sizes="(min-width: 448px) 448px, 90vw"
+                    className="object-contain"
+                  />
+                </div>
+              )}
+              <span className="mb-2 block text-sm font-medium text-ui-muted">
+                Sabor
+              </span>
+              <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+                {item.flavors!.map((f) => {
+                  const selected = flavorId === f.id;
+                  return (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => setFlavorId(f.id)}
+                      className={`btn-transition flex flex-col items-start rounded-xl border-2 p-3 text-left transition-colors ${
+                        selected
+                          ? "border-ui-primary bg-ui-primary/5"
+                          : "border-ui-border bg-white hover:border-ui-main/30"
+                      }`}
+                    >
+                      <span className="font-medium text-ui-text">{f.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {!bebida && (
+            <>
+              <label className="flex cursor-pointer items-center justify-between gap-3">
+                <span className="text-sm font-medium text-ui-text">
+                  {isHamburger(item) ? "Papas extra grande" : "Añadir papas"}
+                </span>
+                <span className="text-sm text-ui-muted">
+                  {formatCOP(
+                    isHamburger(item) ? PAPAS_ADDON_HAMBURGER : PAPAS_ADDON_OTHER,
+                  )}
+                </span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={addPapas}
+                  className={`btn-transition relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 transition-colors ${
+                    addPapas
+                      ? "border-ui-primary bg-ui-primary"
+                      : "border-ui-border bg-white"
+                  }`}
+                  onClick={() => setAddPapas((prev) => !prev)}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                      addPapas ? "translate-x-5" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </label>
+
+              <div>
+                <span className="mb-2 block text-sm font-medium text-ui-muted">
+                  Adiciones ({formatCOP(ADDITION_PRICE)} c/u)
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {ADDITIONS_OPTIONS.map((name) => {
+                    const checked = additions.includes(name);
+                    return (
+                      <label
+                        key={name}
+                        className="btn-transition flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors has-[:checked]:border-ui-primary has-[:checked]:bg-ui-primary/10"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleAddition(name)}
+                          className="h-4 w-4 rounded border-ui-border text-ui-primary focus:ring-ui-primary"
+                        />
+                        {name}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <span className="mb-2 block text-sm font-medium text-ui-muted">
+                  Bebida (opcional)
+                </span>
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
                   <button
-                    key={b.id}
                     type="button"
-                    onClick={() => setDrinkId(b.id)}
+                    onClick={() => setDrinkId(null)}
                     className={`btn-transition flex flex-col items-start rounded-xl border-2 p-3 text-left transition-colors ${
-                      selected
+                      drinkId === null
                         ? "border-ui-primary bg-ui-primary/5"
                         : "border-ui-border bg-white hover:border-ui-main/30"
                     }`}
                   >
-                    <span className="font-medium text-ui-text">{b.name}</span>
-                    <span className="mt-0.5 text-sm text-ui-muted">
-                      {formatCOP(b.price ?? 0)}
-                    </span>
+                    <span className="font-medium text-ui-text">Ninguna</span>
                   </button>
-                );
-              })}
-            </div>
-          </div>
+                  {BEBIDAS.map((b) => {
+                    const selected = drinkId === b.id;
+                    return (
+                      <button
+                        key={b.id}
+                        type="button"
+                        onClick={() => setDrinkId(b.id)}
+                        className={`btn-transition flex flex-col items-start rounded-xl border-2 p-3 text-left transition-colors ${
+                          selected
+                            ? "border-ui-primary bg-ui-primary/5"
+                            : "border-ui-border bg-white hover:border-ui-main/30"
+                        }`}
+                      >
+                        <span className="font-medium text-ui-text">{b.name}</span>
+                        <span className="mt-0.5 text-sm text-ui-muted">
+                          {formatCOP(b.price ?? 0)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
           </div>
         </div>
 
@@ -180,7 +265,7 @@ export default function AddToCartModal({ item, onAdd, onClose }: Props) {
             className="btn-transition w-full rounded-xl bg-ui-primary px-4 py-3 font-medium text-gray-900 hover:opacity-90 active:scale-[0.98]"
             onClick={handleAdd}
           >
-            Añadir al carrito
+            {qty > 1 ? `Añadir ${qty} al carrito` : "Añadir al carrito"}
           </button>
         </div>
       </div>

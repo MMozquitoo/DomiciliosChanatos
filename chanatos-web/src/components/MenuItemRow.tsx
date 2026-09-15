@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
+import Image from "next/image";
 import type { MenuItem } from "@/data/menu";
 import { useCart } from "@/lib/cartStore";
 import { formatCOP } from "@/lib/money";
@@ -25,6 +26,12 @@ export default function MenuItemRow({ item }: Props) {
   const canAdd =
     item.available &&
     (item.price != null || (item.basePrice != null && item.basePrice > 0));
+
+  // Bebidas sin sabores para elegir no tienen nada que personalizar: se
+  // agregan directo, sin abrir el modal de "Añadir papas / Adiciones / Bebida"
+  // (esas opciones no aplican a una bebida).
+  const hasOptions =
+    item.category !== "Bebidas" || (item.flavors?.length ?? 0) > 0;
 
   const qtyInCart = items
     .filter((l) => l.productId === item.id)
@@ -71,12 +78,24 @@ export default function MenuItemRow({ item }: Props) {
 
   function handleAddFromModal(
     modifiers: import("@/lib/cartStore").CartLineModifiers | undefined,
+    qty: number,
   ) {
-    addLine(item.id, modifiers);
+    addLine(item.id, modifiers, qty);
     setShowOptionsModal(false);
   }
 
-  const openOptionsOnDesktop = isDesktop && canAdd;
+  // Desktop: la tarjeta completa responde al click siempre que se pueda
+  // agregar — abre opciones si las hay, o agrega directo (y sube la
+  // cantidad) si no, para que ningún producto se sienta "muerto" al hacer click.
+  const desktopCardClickable = isDesktop && canAdd;
+
+  function handleCardClick() {
+    if (hasOptions) {
+      setShowOptionsModal(true);
+    } else {
+      handleAddDirect();
+    }
+  }
   const hasDescription = Boolean(item.description);
 
   useEffect(() => {
@@ -91,30 +110,32 @@ export default function MenuItemRow({ item }: Props) {
   return (
     <>
       <div
-        className={`flex items-stretch gap-3 border-b border-ui-border py-3 last:border-b-0 lg:flex-row lg:rounded-xl lg:border lg:border-ui-border lg:bg-white lg:p-4 lg:shadow-sm ${openOptionsOnDesktop ? "lg:cursor-pointer" : ""}`}
+        className={`flex items-stretch gap-3 border-b border-ui-border py-3 last:border-b-0 lg:flex-row lg:rounded-xl lg:border lg:border-ui-border lg:bg-white lg:p-4 lg:shadow-sm ${desktopCardClickable ? "lg:cursor-pointer" : ""}`}
         onClick={
-          openOptionsOnDesktop
+          desktopCardClickable
             ? (e) => {
                 const target = e.target as HTMLElement;
-                if (!target.closest("button")) setShowOptionsModal(true);
+                if (!target.closest("button")) handleCardClick();
               }
             : undefined
         }
-        role={openOptionsOnDesktop ? "button" : undefined}
-        tabIndex={openOptionsOnDesktop ? 0 : undefined}
+        role={desktopCardClickable ? "button" : undefined}
+        tabIndex={desktopCardClickable ? 0 : undefined}
         onKeyDown={
-          openOptionsOnDesktop
+          desktopCardClickable
             ? (e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  setShowOptionsModal(true);
+                  handleCardClick();
                 }
               }
             : undefined
         }
         aria-label={
-          openOptionsOnDesktop
-            ? `${item.name}. Click para opciones de personalización.`
+          desktopCardClickable
+            ? hasOptions
+              ? `${item.name}. Click para opciones de personalización.`
+              : `${item.name}. Click para agregar.`
             : undefined
         }
       >
@@ -152,7 +173,7 @@ export default function MenuItemRow({ item }: Props) {
           onClick={(e) => e.stopPropagation()}
         >
           <div
-            className={`h-[72px] w-[72px] shrink-0 rounded-lg bg-ui-border md:h-[80px] md:w-[80px] lg:h-32 lg:w-32 lg:rounded-xl ${!isDesktop && hasDescription ? "cursor-pointer touch-manipulation" : ""}`}
+            className={`relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg bg-ui-border md:h-[80px] md:w-[80px] lg:h-32 lg:w-32 lg:rounded-xl ${!isDesktop && hasDescription ? "cursor-pointer touch-manipulation" : ""}`}
             role={!isDesktop && hasDescription ? "button" : undefined}
             tabIndex={!isDesktop && hasDescription ? 0 : undefined}
             onClick={
@@ -176,22 +197,74 @@ export default function MenuItemRow({ item }: Props) {
                 : undefined
             }
             aria-hidden={isDesktop || !hasDescription}
-          />
-          {/* Mobile: solo botón "Agregar" que abre el menú de adicionales */}
+          >
+            {item.image ? (
+              <Image
+                src={item.image}
+                alt={item.name}
+                fill
+                sizes="(min-width: 1024px) 128px, 80px"
+                className="object-cover"
+              />
+            ) : null}
+          </div>
+          {/* Mobile: items con opciones (papas/adiciones/sabor) abren el modal; bebidas
+              simples se agregan directo y muestran un contador +/- como en desktop. */}
           <div className="lg:hidden">
-            <button
-              type="button"
-              className={
-                canAdd
-                  ? "btn-transition rounded-lg border border-ui-primary bg-ui-primary px-4 py-2 text-sm font-medium text-gray-900 hover:opacity-90 active:scale-95"
-                  : "cursor-not-allowed rounded-lg border border-ui-border bg-white px-4 py-2 text-sm font-medium text-ui-muted"
-              }
-              onClick={() => canAdd && setShowOptionsModal(true)}
-              disabled={!canAdd}
-              aria-label={canAdd ? `Agregar ${item.name}. Abre opciones.` : "No disponible"}
-            >
-              {canAdd ? "Agregar" : "No disponible"}
-            </button>
+            {hasOptions ? (
+              <button
+                type="button"
+                className={
+                  canAdd
+                    ? "btn-transition rounded-lg border border-ui-primary bg-ui-primary px-4 py-2 text-sm font-medium text-gray-900 hover:opacity-90 active:scale-95"
+                    : "cursor-not-allowed rounded-lg border border-ui-border bg-white px-4 py-2 text-sm font-medium text-ui-muted"
+                }
+                onClick={() => canAdd && setShowOptionsModal(true)}
+                disabled={!canAdd}
+                aria-label={canAdd ? `Agregar ${item.name}. Abre opciones.` : "No disponible"}
+              >
+                {canAdd ? "Agregar" : "No disponible"}
+              </button>
+            ) : qtyInCart >= 1 ? (
+              <div className="flex items-center gap-1 rounded-full border border-ui-border bg-white px-1.5 py-1 shadow-sm">
+                <button
+                  type="button"
+                  className="btn-transition flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ui-border bg-white text-ui-text hover:bg-ui-border active:scale-95"
+                  onClick={handleDec}
+                  aria-label={`Quitar una unidad de ${item.name}`}
+                >
+                  −
+                </button>
+                <span
+                  className="min-w-[1.5rem] text-center text-sm font-semibold text-ui-text"
+                  aria-label={`Cantidad: ${qtyInCart}`}
+                >
+                  {qtyInCart}
+                </span>
+                <button
+                  type="button"
+                  className="btn-transition flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ui-primary bg-ui-primary text-lg font-medium leading-none text-gray-900 hover:opacity-90 active:scale-95"
+                  onClick={handleAddDirect}
+                  aria-label={`Agregar ${item.name}`}
+                >
+                  +
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={
+                  canAdd
+                    ? "btn-transition rounded-lg border border-ui-primary bg-ui-primary px-4 py-2 text-sm font-medium text-gray-900 hover:opacity-90 active:scale-95"
+                    : "cursor-not-allowed rounded-lg border border-ui-border bg-white px-4 py-2 text-sm font-medium text-ui-muted"
+                }
+                onClick={handleAddDirect}
+                disabled={!canAdd}
+                aria-label={canAdd ? `Agregar ${item.name}` : "No disponible"}
+              >
+                {canAdd ? "Agregar" : "No disponible"}
+              </button>
+            )}
           </div>
           {/* Desktop: contador y botones + / − con fondo */}
           <div className="hidden items-center gap-1 rounded-full bg-white/95 px-1.5 py-1 shadow-md ring-1 ring-black/10 lg:flex lg:absolute lg:bottom-0 lg:right-0">
@@ -245,7 +318,17 @@ export default function MenuItemRow({ item }: Props) {
             aria-labelledby="item-desc-title"
             aria-describedby="item-desc-text"
           >
-            <div className="h-32 bg-ui-border md:h-48" aria-hidden />
+            <div className="relative h-32 bg-ui-border md:h-48" aria-hidden>
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt=""
+                  fill
+                  sizes="(min-width: 448px) 448px, 90vw"
+                  className="object-cover"
+                />
+              ) : null}
+            </div>
             <div className="p-4">
               <h3 id="item-desc-title" className="font-semibold text-ui-text">
                 {item.name}

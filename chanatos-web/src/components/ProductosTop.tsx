@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { MENU } from "@/data/menu";
 import { useCart } from "@/lib/cartStore";
 import { formatCOP } from "@/lib/money";
@@ -33,7 +34,7 @@ export default function ProductosTop() {
         >
           Productos top
         </h2>
-        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="grid grid-cols-4 gap-4">
           {items.map((item) => {
             const canAdd =
               item.available &&
@@ -47,9 +48,22 @@ export default function ProductosTop() {
             return (
               <div
                 key={item.id}
-                className="flex w-[180px] shrink-0 flex-col rounded-xl border border-ui-border bg-white p-4 shadow-sm"
+                className="flex flex-col rounded-xl border border-ui-border bg-white p-4 shadow-sm"
               >
-                <div className="min-h-[80px] rounded-lg bg-ui-border" aria-hidden />
+                <div
+                  className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-ui-border"
+                  aria-hidden
+                >
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 25vw, 180px"
+                      className="object-contain"
+                    />
+                  ) : null}
+                </div>
                 <div className="mt-3 font-semibold text-ui-text">
                   {item.name}
                 </div>
@@ -74,8 +88,8 @@ export default function ProductosTop() {
       {openItem && (
         <AddToCartModal
           item={openItem}
-          onAdd={(modifiers) => {
-            addLine(openItem.id, modifiers);
+          onAdd={(modifiers, qty) => {
+            addLine(openItem.id, modifiers, qty);
             setOpenId(null);
           }}
           onClose={() => setOpenId(null)}

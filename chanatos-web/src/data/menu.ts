@@ -22,6 +22,10 @@ export type MenuItem = {
   comboEligible?: boolean;
   /** Ej: "Thu-Sat" para Hervido */
   availableDays?: string;
+  /** Ruta de la imagen del producto en /public */
+  image?: string;
+  /** Variantes de sabor (ej. Hit): cada una con su propia imagen. `image` de arriba se usa como default antes de elegir. */
+  flavors?: { id: string; name: string; image: string }[];
 };
 
 export const MENU: MenuItem[] = [
@@ -36,6 +40,7 @@ export const MENU: MenuItem[] = [
     basePrice: 13000,
     comboAddon: 4000,
     comboEligible: true,
+    image: "/products/hamburguesas/hamburguesa-clasica.jpg",
   },
   {
     id: "hamburguesa-chanata",
@@ -47,6 +52,7 @@ export const MENU: MenuItem[] = [
     basePrice: 17000,
     comboAddon: 4000,
     comboEligible: true,
+    image: "/products/hamburguesas/hamburguesa-chanata.jpg",
   },
   {
     id: "hamburguesa-doble-carne",
@@ -58,6 +64,7 @@ export const MENU: MenuItem[] = [
     basePrice: 20000,
     comboAddon: 4000,
     comboEligible: true,
+    image: "/products/hamburguesas/hamburguesa-doble-carne.jpg",
   },
   // Perros calientes
   {
@@ -68,6 +75,7 @@ export const MENU: MenuItem[] = [
     category: "Perros calientes",
     available: true,
     price: 9000,
+    image: "/products/perros-calientes/perro-clasico.jpg",
   },
   {
     id: "perro-especial",
@@ -77,6 +85,7 @@ export const MENU: MenuItem[] = [
     category: "Perros calientes",
     available: true,
     price: 11000,
+    image: "/products/perros-calientes/perro-especial.jpg",
   },
   // Filetes
   {
@@ -87,6 +96,7 @@ export const MENU: MenuItem[] = [
     category: "Filetes",
     available: true,
     price: 16000,
+    image: "/products/filetes/filete-pollo.jpg",
   },
   {
     id: "filete-cerdo",
@@ -96,6 +106,7 @@ export const MENU: MenuItem[] = [
     category: "Filetes",
     available: true,
     price: 16000,
+    image: "/products/filetes/filete-cerdo.jpg",
   },
   // Papas & Salchipapas
   {
@@ -106,6 +117,7 @@ export const MENU: MenuItem[] = [
     category: "Papas & Salchipapas",
     available: true,
     price: 5000,
+    image: "/products/papas-salchipapas/papas-sencilla.jpg",
   },
   {
     id: "salchipapa-sencilla",
@@ -115,6 +127,7 @@ export const MENU: MenuItem[] = [
     category: "Papas & Salchipapas",
     available: true,
     price: 7000,
+    image: "/products/papas-salchipapas/salchipapa-sencilla.jpg",
   },
   {
     id: "papa-loka",
@@ -124,6 +137,7 @@ export const MENU: MenuItem[] = [
     category: "Papas & Salchipapas",
     available: true,
     price: 20000,
+    image: "/products/papas-salchipapas/papa-loka.jpg",
   },
   // Sándwiches
   {
@@ -133,49 +147,151 @@ export const MENU: MenuItem[] = [
     category: "Sándwiches",
     available: true,
     price: 11000,
+    image: "/products/sandwiches/sandwich-pollo.jpg",
   },
-  // Bebidas - Refrescos
+  // Bebidas - Gaseosas personales (250 ml)
   {
-    id: "gaseosa-personal",
-    name: "Gaseosa personal",
-    description:
-      "Gaseosa refrescante de sabor suave en presentación de 250 ml.",
+    id: "pepsi-personal",
+    name: "Pepsi Personal",
+    description: "Gaseosa Pepsi en botella de vidrio de 250 ml.",
     category: "Bebidas",
     available: true,
     price: 2000,
+    image: "/products/bebidas/pepsi-personal.jpg",
   },
   {
-    id: "jugo-hit",
-    name: "Jugo Hit 500ml",
+    id: "postobon-uva-personal",
+    name: "Postobón Uva Personal",
+    description: "Gaseosa Postobón sabor uva en botella de vidrio de 250 ml.",
+    category: "Bebidas",
+    available: true,
+    price: 2000,
+    image: "/products/bebidas/postobon-uva-personal.jpg",
+  },
+  {
+    id: "postobon-naranja-personal",
+    name: "Postobón Naranja Personal",
     description:
-      "Jugo frutal sin gas en presentación de 500 ml, disponible en varios sabores.",
+      "Gaseosa Postobón sabor naranja en botella de vidrio de 250 ml.",
     category: "Bebidas",
     available: true,
-    price: 4000,
+    price: 2000,
+    image: "/products/bebidas/postobon-naranja-personal.jpg",
   },
   {
-    id: "mr-tea",
-    name: "Mr Tea 500ml",
-    description: "Bebida fría a base de té en presentación de 500 ml.",
+    id: "colombiana-personal",
+    name: "Colombiana Personal",
+    description: "Gaseosa Colombiana en botella de vidrio de 250 ml.",
     category: "Bebidas",
     available: true,
-    price: 4000,
+    price: 2000,
+    image: "/products/bebidas/colombiana-personal.jpg",
   },
   {
-    id: "coca-personal",
-    name: "Coca-Cola personal",
-    description: "Gaseosa clásica en presentación de 500 ml.",
+    id: "cuatro-toronja-personal",
+    name: "Cuatro Toronja Personal",
+    description: "Gaseosa Cuatro sabor toronja en botella personal.",
+    category: "Bebidas",
+    available: true,
+    price: 2000,
+    image: "/products/bebidas/cuatro-toronja-personal.jpg",
+  },
+  {
+    id: "coca-cola-personal",
+    name: "Coca-Cola Personal",
+    description: "Gaseosa Coca-Cola sabor original en botella de 500 ml.",
     category: "Bebidas",
     available: true,
     price: 5000,
+    image: "/products/bebidas/coca-cola-personal.jpg",
   },
+  // Bebidas - Formato familiar
   {
-    id: "gaseosa-litro",
-    name: "Gaseosa Litro",
-    description: "Gaseosa refrescante de sabor suave en presentación de 1 L.",
+    id: "postobon-manzana",
+    name: "Postobón Manzana",
+    description: "Gaseosa Postobón sabor manzana en botella familiar.",
     category: "Bebidas",
     available: true,
     price: 6000,
+    image: "/products/bebidas/postobon-manzana.jpg",
+  },
+  {
+    id: "pepsi-familiar",
+    name: "Pepsi Familiar",
+    description: "Gaseosa Pepsi en botella familiar.",
+    category: "Bebidas",
+    available: true,
+    price: 6000,
+    image: "/products/bebidas/pepsi-familiar.jpg",
+  },
+  {
+    id: "colombiana-familiar",
+    name: "Colombiana Familiar",
+    description: "Gaseosa Colombiana en botella familiar.",
+    category: "Bebidas",
+    available: true,
+    price: 6000,
+    image: "/products/bebidas/colombiana-familiar.jpg",
+  },
+  {
+    id: "postobon-naranja-familiar",
+    name: "Postobón Naranja 1.25L",
+    description: "Gaseosa Postobón sabor naranja en botella de 1.25 L.",
+    category: "Bebidas",
+    available: true,
+    price: 6000,
+    image: "/products/bebidas/postobon-naranja-familiar.jpg",
+  },
+  {
+    id: "cuatro-toronja",
+    name: "Cuatro Toronja",
+    description: "Gaseosa Cuatro sabor toronja en botella familiar.",
+    category: "Bebidas",
+    available: true,
+    price: 6000,
+    image: "/products/bebidas/cuatro-toronja.jpg",
+  },
+  {
+    id: "hit",
+    name: "Hit",
+    description: "Refresco de fruta Hit en botella de 500 ml. Elige tu sabor.",
+    category: "Bebidas",
+    available: true,
+    price: 4000,
+    image: "/products/bebidas/hit-mora.jpg",
+    flavors: [
+      { id: "mora", name: "Mora", image: "/products/bebidas/hit-mora.jpg" },
+      { id: "mango", name: "Mango", image: "/products/bebidas/hit-mango.jpg" },
+      {
+        id: "naranja-pina",
+        name: "Naranja-Piña",
+        image: "/products/bebidas/hit-naranja-pina.jpg",
+      },
+      {
+        id: "frutas-tropicales",
+        name: "Frutas Tropicales",
+        image: "/products/bebidas/hit-frutas-tropicales.jpg",
+      },
+      { id: "lulo", name: "Lulo", image: "/products/bebidas/hit-lulo.jpg" },
+    ],
+  },
+  {
+    id: "mr-tea",
+    name: "Mr Tea Limón",
+    description: "Bebida fría a base de té sabor limón en botella familiar.",
+    category: "Bebidas",
+    available: true,
+    price: 4000,
+    image: "/products/bebidas/mr-tea.jpg",
+  },
+  {
+    id: "agua-mia",
+    name: "Agua Mía 600ml",
+    description: "Agua potable tratada en presentación de 600 ml.",
+    category: "Bebidas",
+    available: true,
+    price: 3000,
+    image: "/products/bebidas/agua-mia.jpg",
   },
   // Bebidas - Cervezas
   {
@@ -185,6 +301,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 5000,
+    image: "/products/bebidas/cerveza-andina.jpg",
   },
   {
     id: "cerveza-poker",
@@ -193,6 +310,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 5000,
+    image: "/products/bebidas/cerveza-poker.jpg",
   },
   {
     id: "cerveza-heineken",
@@ -201,6 +319,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 5000,
+    image: "/products/bebidas/cerveza-heineken.jpg",
   },
   {
     id: "cerveza-corona",
@@ -209,6 +328,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 6000,
+    image: "/products/bebidas/cerveza-corona.jpg",
   },
   // Bebidas - Jugos naturales y otros
   {
@@ -218,6 +338,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 5000,
+    image: "/products/bebidas/jugos-agua.jpg",
   },
   {
     id: "jugos-leche",
@@ -226,6 +347,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 8000,
+    image: "/products/bebidas/jugos-leche.jpg",
   },
   {
     id: "michelada",
@@ -234,6 +356,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 8000,
+    image: "/products/bebidas/michelada.jpg",
   },
   {
     id: "limonada-natural",
@@ -242,6 +365,7 @@ export const MENU: MenuItem[] = [
     category: "Bebidas",
     available: true,
     price: 8000,
+    image: "/products/bebidas/limonada-natural.jpg",
   },
 ];
 
